@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -7,7 +9,8 @@ import {
 } from "@/components/ui/sheet";
 import { Menu, Home, Ticket, User, DollarSign } from "lucide-react";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import { ButtonLogout } from "../buttonLogout";
 
 export function Navbar() {
   return (
@@ -51,13 +54,7 @@ export function Navbar() {
                 </div>
               </Link>
             </div>
-            <div className="absolute bottom-4 flex justify-center items-center gap-2">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <p>nome do usuario</p>
-            </div>
+            <ButtonLogout />
           </SheetContent>
         </Sheet>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -13,6 +14,15 @@ import Link from "next/link";
 import { ButtonLogout } from "../buttonLogout";
 
 export function Navbar() {
+  const pathname = usePathname();
+
+  const isEventPage =
+    pathname.startsWith("/event/") && pathname.split("/").length === 3;
+
+  if (isEventPage) {
+    return null;
+  }
+
   return (
     <header className="flex items-center justify-center relative py-4">
       <h3>eventify</h3>
@@ -33,10 +43,10 @@ export function Navbar() {
                 </div>
               </Link>
 
-              <Link href="/criar-evento" passHref>
+              <Link href="event" passHref>
                 <div className="flex items-center gap-2">
                   <Ticket size={24} />
-                  Criar Evento
+                  Eventos
                 </div>
               </Link>
 

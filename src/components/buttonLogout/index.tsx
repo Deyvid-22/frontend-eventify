@@ -7,21 +7,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { useRouter } from "next/navigation";
-
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useEffect } from "react";
+
+import { User } from "lucide-react";
 
 export function ButtonLogout() {
   const { data: session } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!session?.user) router.push("/");
-
-    console.log(session?.user);
-  }, [session?.user, router]);
 
   return (
     <DropdownMenu>
@@ -29,9 +21,11 @@ export function ButtonLogout() {
         <div className="flex justify-center items-center gap-2 absolute bottom-4">
           <Avatar>
             <AvatarImage src={session?.user?.image || ""} />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>
+              <User />
+            </AvatarFallback>
           </Avatar>
-          <p>nome do usuario</p>
+          <p>{session?.user?.name || "Faça login"}</p>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -40,7 +34,7 @@ export function ButtonLogout() {
           <DropdownMenuItem onClick={() => signOut()}>Sair</DropdownMenuItem>
         ) : (
           <DropdownMenuItem
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            onClick={() => signIn("google", { callbackUrl: "/events" })}
           >
             Entrar
           </DropdownMenuItem>

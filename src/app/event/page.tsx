@@ -16,15 +16,13 @@ export default async function Events() {
   try {
     const response = await api.get("/events");
     eventsData = response.data;
-
-    // console.log("Dados dos eventos:", eventsData);
   } catch (error) {
     console.error("Erro ao buscar dados dos eventos", error);
   }
 
   return (
     <div>
-      <h1>Eventos</h1>
+      <h1 className="text-center my-3">Eventos</h1>
 
       <section className="flex flex-col gap-5">
         {eventsData.length > 0 ? (

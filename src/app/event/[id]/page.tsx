@@ -1,12 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/axios";
 import { ExternalLink, FactoryIcon, Heart, MoveLeft } from "lucide-react";
-
+import { signIn, useSession } from "next-auth/react";
+import { Modal } from "@/components/modal";
+import { IconGoogle } from "@/components/icons/IconGoogle";
 import { Loading } from "@/components/loading";
 
 interface Event {
@@ -19,18 +22,19 @@ interface Event {
 
 export default function Event() {
   const { id } = useParams();
+
+  const { data: session } = useSession();
+
+  const router = useRouter();
+
   const [eventData, setEventData] = useState<Event | null>(null);
 
   useEffect(() => {
     const fetchEventData = async () => {
-      try {
-        const response = await api.get(`/event/${id}`);
-        setEventData(response.data);
-        console.log("Status da resposta:", response.status);
-        console.log("Resposta do servidor:", response.data);
-      } catch (error) {
-        console.error("Erro ao buscar dados do evento", error);
-      }
+      const response = await api.get(`/event/${id}`);
+      setEventData(response.data);
+      console.log("Status da resposta:", response.status);
+      console.log("Resposta do servidor:", response.data);
     };
 
     fetchEventData();
@@ -44,11 +48,22 @@ export default function Event() {
     );
   }
 
+  function VerifyLogout() {
+    //aqui sera acondição para busca os favoritos caso o user estaja logado
+    // if (!session?.user) {
+    //   alert("Faça login para curtir o evento");
+    // }
+  }
+
   return (
     <>
       <section className="flex flex-col items-center relative w-full h-[250px]">
         <div className="absolute w-full z-10 top-1 flex justify-between items-center p-4 ">
-          <MoveLeft size={30} className="cursor-pointer  " />
+          <MoveLeft
+            size={30}
+            className="cursor-pointer"
+            onClick={() => router.back()}
+          />
           <div className="flex justify-center items-center gap-2 relative">
             <ExternalLink size={30} />
             <FactoryIcon size={28} />
@@ -67,17 +82,41 @@ export default function Event() {
         </div>
       </section>
 
-      <section className="w-full flex justify-between items-center px-4 py-2">
-        <div>
-          <p>38,99</p>
-          <p>
-            Em ate <span>2X R$ 6,15</span>
-          </p>
+      <section className="space-y-3 px-2 py-3">
+        <div className="w-full flex justify-between items-center">
+          <div className="flex  justify-center items-end gap-1">
+            <div>
+              <p className="font-light text-[15px] text-green-400 space-x-1">
+                R$ <span className="text-[18px]">38,99 </span>
+                <span className=" line-through text-slate-600">R$ 50,65</span>
+              </p>
+              <p>
+                <span className="text-gray-400 text-[16px]">
+                  Em ate 2x 6,15
+                </span>
+              </p>
+            </div>
+            <p className="text-[13px]"></p>
+          </div>
+          <div className="flex justify-center items-center gap-1">
+            <p className="font-semibold text-[18px]">252 vendido(s)</p>
+            {session?.user ? (
+              <Heart size={28} onClick={() => VerifyLogout()} />
+            ) : (
+              <Modal icon={<Heart size={28} />}>
+                <Button onClick={() => signIn("google")}>
+                  <IconGoogle /> Fazer login
+                </Button>
+              </Modal>
+            )}
+          </div>
         </div>
-        <div className="flex justify-center items-center gap-2">
-          <p>252 vendido(s)</p>
-          <Heart size={30} />
-        </div>
+        <p>
+          {eventData.description} Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Reprehenderit laboriosam, molestias, natus totam
+          corrupti dolorem minus iste omnis itaque temporibus accusantium
+          praesentium deserunt id, cum eum! Atque ex cupiditate quod.
+        </p>
       </section>
     </>
   );

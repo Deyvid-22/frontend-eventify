@@ -11,6 +11,7 @@ export function Banner() {
           priority={true}
           quality={100}
           className="object-cover"
+          rel="preload"
         />
 
         <div className="absolute w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white p-4 bg-opacity-70 bg-black rounded-md">

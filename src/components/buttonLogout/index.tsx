@@ -1,4 +1,5 @@
 "use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,7 +35,7 @@ export function ButtonLogout() {
           <DropdownMenuItem onClick={() => signOut()}>Sair</DropdownMenuItem>
         ) : (
           <DropdownMenuItem
-            onClick={() => signIn("google", { callbackUrl: "/events" })}
+            onClick={() => signIn("google", { callbackUrl: "/event" })}
           >
             Entrar
           </DropdownMenuItem>

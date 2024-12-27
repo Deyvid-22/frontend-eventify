@@ -19,12 +19,12 @@ export function Navbar() {
   const isEventPage =
     pathname.startsWith("/event/") && pathname.split("/").length === 3;
 
-  if (isEventPage) {
+  if (!isEventPage) {
     return null;
   }
 
   return (
-    <header className="flex items-center justify-center relative py-4">
+    <header className="flex items-center justify-center relative py-4 bg-transparent">
       <h3>eventify</h3>
       <div className="absolute right-4">
         <Sheet>

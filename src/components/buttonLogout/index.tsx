@@ -19,14 +19,17 @@ export function ButtonLogout() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex justify-center items-center gap-2 absolute bottom-4">
+        <div
+          className="flex justify-center items-center gap-2 absolute bottom-4 cursor-pointer sm:flex-row-reverse"
+          title={session?.user ? "Sair" : "Entrar"}
+        >
           <Avatar>
             <AvatarImage src={session?.user?.image || ""} />
             <AvatarFallback>
               <User />
             </AvatarFallback>
           </Avatar>
-          <p>{session?.user?.name || "Faça login"}</p>
+          <p>{session?.user?.name}</p>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -35,7 +38,7 @@ export function ButtonLogout() {
           <DropdownMenuItem onClick={() => signOut()}>Sair</DropdownMenuItem>
         ) : (
           <DropdownMenuItem
-            onClick={() => signIn("google", { callbackUrl: "/event" })}
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
           >
             Entrar
           </DropdownMenuItem>

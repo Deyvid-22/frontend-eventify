@@ -20,7 +20,7 @@ interface Event {
   imageUrl: string;
 }
 
-export default function Event() {
+export default function CardDetail() {
   const { id } = useParams();
 
   const { data: session } = useSession();

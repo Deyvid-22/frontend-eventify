@@ -4,8 +4,6 @@ import "./globals.css";
 
 import { AuthProvider } from "@/providers/auth";
 
-import { Navbar } from "@/components/navbar";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,8 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
         <AuthProvider>
-          <Navbar />
-          {children}
+          <div>{children}</div>
         </AuthProvider>
       </body>
     </html>

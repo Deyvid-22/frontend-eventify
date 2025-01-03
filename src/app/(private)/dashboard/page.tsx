@@ -1,17 +1,23 @@
 import { ButtonLogout } from "@/components/buttonLogout";
 import { Chart } from "@/components/chart";
 import { CardComponent } from "@/components/card";
-import { getServerSession } from "next-auth";
+
 import { Navbar } from "@/components/navbar";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { SelectEvent } from "@/components/selectEvent";
+
+import { decodeJwt } from "@/utils/decodeJwt";
 
 export default async function Dashboard() {
-  const session = await getServerSession();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("userData")?.value;
 
-  if (!session?.user) {
+  if (!token) {
     redirect("/login");
   }
 
+  console.log(decodeJwt(token));
   return (
     <>
       <Navbar />
@@ -20,7 +26,7 @@ export default async function Dashboard() {
           <div className="hidden sm:flex justify-end items-center w-full py-8 pr-4 text-end font-bold text-2xl relative">
             <ButtonLogout />
           </div>
-          <h3 className="font-bold text-[16px] my-2">Último Evento</h3>
+          <SelectEvent />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <CardComponent
               title="Total de vendas"

@@ -10,11 +10,18 @@ import {
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Cookies from "js-cookie";
 
 import { User } from "lucide-react";
 
 export function ButtonLogout() {
   const { data: session } = useSession();
+
+  function handleLogout() {
+    Cookies.remove("userData");
+
+    signOut({ callbackUrl: "/login" });
+  }
 
   return (
     <DropdownMenu>
@@ -29,13 +36,15 @@ export function ButtonLogout() {
               <User />
             </AvatarFallback>
           </Avatar>
-          <p>{session?.user?.name}</p>
+          <p className="text-lg">{session?.user?.name || "Entrar"}</p>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuSeparator />
         {session?.user ? (
-          <DropdownMenuItem onClick={() => signOut()}>Sair</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleLogout()}>
+            Sair
+          </DropdownMenuItem>
         ) : (
           <DropdownMenuItem
             onClick={() => signIn("google", { callbackUrl: "/dashboard" })}

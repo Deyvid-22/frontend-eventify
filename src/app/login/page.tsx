@@ -2,25 +2,30 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ButtonLogin } from "@/components/buttonlogin";
+
 import { api } from "@/lib/axios";
-import { useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import Cookies from "js-cookie";
+import { IconGoogle } from "@/components/icons/IconGoogle";
 
 export default function Login() {
   const { data: session } = useSession();
   const token = Cookies.get("userData");
   const router = useRouter();
 
-  useEffect(() => {
-    if (!session?.user) {
-      return;
-    }
+  const login = useCallback(() => {
+    signIn("google");
+  }, []);
 
+  useEffect(() => {
     if (token) {
       router.push("/dashboard");
+    }
+
+    if (!session?.user) {
+      return;
     }
 
     const fetchData = async () => {
@@ -29,22 +34,19 @@ export default function Login() {
           email: session?.user?.email,
         });
 
-        if (response.data.error === "user not exists" || !response.data.token) {
-          console.log("not authorization");
-          return;
-        }
-
         const data = response.data.token;
         Cookies.set("userData", JSON.stringify(data), { expires: 7 });
         console.log("Dados salvos nos cookies:", data);
         router.push("/dashboard");
       } catch (error) {
-        router.push("/login");
-        console.error("Erro ao buscar dados:", error);
+        signOut({
+          callbackUrl: "/payment",
+        });
+        console.log("Erro ao buscar dados:", error);
       }
     };
     fetchData();
-  }, [session?.user, router, token]);
+  }, [session?.user, router, token, login]);
 
   return (
     <div className="grid grid-cols-2 justify-center items-center w-full relative h-screen object-cover">
@@ -58,7 +60,12 @@ export default function Login() {
             personalizados, com total controle e flexibilidade.
           </p>
           <div className="mt-5 flex flex-col items-center justify-center gap-x-6 gap-y-3">
-            <ButtonLogin />
+            <button
+              className="flex justify-center items-center gap-2 bg-slate-300 text-slate-800 font-bold px-6 py-3 rounded-md"
+              onClick={() => login()}
+            >
+              <IconGoogle /> Fazer Login com Google
+            </button>
 
             <Link href="/payment" className="underline">
               Conheça nossos Planos
